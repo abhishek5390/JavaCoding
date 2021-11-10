@@ -2,6 +2,7 @@ package org.gudigar.ConcurrentModificationException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -16,6 +17,7 @@ public class CollectionGenerics {
 	//Collection - Interface
 	//Collections - class
 	public static void main(String[] args) {
+		
 		//Array of 4 elements. Size of array is fixed. Here type is int as it is defined
 		int a[] = new int[4];
 		
@@ -41,7 +43,7 @@ public class CollectionGenerics {
 		
 		//Set cannot have duplicate values. Order in which elements are retrieved is in random
 		Set<Integer> values4 = new HashSet<>();
-		//order in which elements are retrieved will be in sorted (ascending)
+		//In treeset order in which elements are retrieved will be in sorted (ascending)
 		Set<Integer> values5 = new TreeSet<>();
 		
 		Map<Integer, String> m = new HashMap<>(); //Non synchorized, not thread safe
