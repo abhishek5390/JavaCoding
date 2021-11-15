@@ -58,7 +58,7 @@ public class ParallelStreams {
 		//Output : Normal stream execution time - 161
 		
 		
-		//find average using normal stream. (using map reduce function)
+		//find average using parallel stream. (using map reduce function)
 		start = System.currentTimeMillis();
 		double salaryWithParallelStream = employees.parallelStream().map(Employee::getSalary).mapToDouble(i -> i).average().getAsDouble();
 		end = System.currentTimeMillis();

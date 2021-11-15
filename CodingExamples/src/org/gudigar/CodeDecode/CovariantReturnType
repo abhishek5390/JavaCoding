@@ -1,0 +1,5 @@
+Covariant return type - means return type may vary during overriding
+- introduced after java 5. Before java5, it was not allowed to override any method if return type is changed in child class. 
+But now its possible only if return type is subclass type
+
+That means the return type of overriden class should be the same as that of parent class method or it should be the sub class of the return type of parent class

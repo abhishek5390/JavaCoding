@@ -1,4 +1,4 @@
-package org.gudigar.CodeDecode;
+package org.gudigar.CodeDecode1;
 
 import java.util.Arrays;
 import java.util.HashMap;

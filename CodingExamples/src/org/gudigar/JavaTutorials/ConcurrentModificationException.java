@@ -23,13 +23,13 @@ public class ConcurrentModificationException {
 		
 		//removing element using ArrayList's remove method during iteration
 		//This will throw CME
-		/*
+		
 		for(String mobile : mobiles) {
 			if(mobile.equals("Redmi")) {
 				mobiles.remove(mobile);
 			}
 		}
-		*/
+		
 		
 		//to fix this issue, we need to use Iterator remove method
 		Iterator<String> itr = mobiles.iterator();

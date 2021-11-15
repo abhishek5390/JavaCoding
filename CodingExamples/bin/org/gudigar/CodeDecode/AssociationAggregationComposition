@@ -1,0 +1,25 @@
+
+Inheritance - IS-A relationship
+
+Association - relationships between 2 classes
+Types of Association
+
+Aggregation - HAS-A relationship. is a weak association. Which means 2 objects are loosely coupled, and one object can exist without the other object also
+Ex: Car and Driver. Car can exists without driver and vice versa. 
+Car HAS-A driver
+driver HAS-A car
+
+public class Driver{
+     private Car car;
+}
+
+Another example. Team and cricket players
+
+Composition - part of relationship. is a strong association. Which means, one object cannot exists without another object
+Ex: Car and Engine
+Car has engine. Engine is a part of car. 
+Engine cannot exists witout a car
+
+public class Driver{
+     private Engine engine;
+}

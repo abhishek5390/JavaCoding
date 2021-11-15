@@ -1,0 +1,18 @@
+Type Promotion:
+smaller datatype is promoted to bigger one if no matching data type is found
+E.g: add(int a, Long b)
+When we call add(4,5) then 5 is promoted to long data type,
+But if
+Actual Agruments - add(4,5)
+1. matches Formal arguments add(int a, int b)
+    4 and 5 matched to a and b
+
+2. Doesnt match but can be promoted
+   add(int a, Long b)
+   4 matched to a but 5 is promoted to Long
+
+3. Matches more than once/ ambiguity
+   add(int a, Long b)
+   add(Long a, int b)
+   who to promote to long is ambiguity
+

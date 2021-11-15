@@ -1,0 +1,10 @@
+We cannot reduce the visibility of the inherited method from Parent
+When parent class method is public, we cannot change the access modifier of child class to private, protected or default. This will throw Compile time error
+Solution: 
+1. Change the visibility of inherited class to public.
+2. Change the visibility of parent class method and inherited method to package. I mean dont specify any access modifiers to both the methods
+
+You can make inherited method more accesible than the parent class method. 
+ex: default to parent class method and public for inherited method
+hierarchy -> public, protected, default (no keyword has to be specified), private
+This is how restricted visibility of overriden method is not allowed

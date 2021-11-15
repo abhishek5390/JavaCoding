@@ -1,4 +1,4 @@
-package org.gudigar.CodeDecode;
+package org.gudigar.CodeDecode1;
 
 // ABC class implements the interface Runnable  
 class ABC implements Runnable  
