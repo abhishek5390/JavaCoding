@@ -1,0 +1,212 @@
+What is Hibernate and why to use it
+ORM tool to provide the mapping between java object and database. 
+Hibernate provides JPA implementation hence we can use JPA annotations as well as xml confgurations to achieve this mapping
+
+Hibernate eliminates all the boiler-plate code that comes with JDBC.
+It supports HQL which is more Object-oriented.
+It provides transaction management implicitly.
+Hibernate throws  JDBCException or HibernateException which are the unchecked exceptions, so we don’t need to worry about handling using try and catch.
+Hibernate supports caching for better performance.
+
+Important interfaces used in Hibernate
+SessionFactory (org.hiberante.SessionFactory) - Instance of this is used to retrieve session objects for data base operations. We need to initialize that once and can cache it to reuse it again and again.
+It is like one SessionFactory object per database connection. Like 1 for mysql, 1 for oracle. 
+
+Session (org.hibernate.Session) - Its factory for transaction. It is used for connecting the application with persistent store like hibernate framework/DB. It is used to get physical connection with db. It also provides methods for CRUD operations
+
+Transaction (org.hibernate.Transaction) - This specifies single / atomic units of work. All CRUD operations can be part of one transaction, and later we can commit it. If one of the CRUD operation fails, transaction can be rolled back
+ 
+SessionFactory factory = metadata.getSessionFactoryBuildet().build();
+Session session = factory.openSession();
+Transaction t = session.beginTransaction();
+
+session.save(persistentObj);
+t.commit();
+session.close();
+factory.close();
+
+**********************************************************
+
+Important annotations used in hibernate
+javax.persistence.Entity - used with model classes to specify that they are entity beans
+
+javax.persistence.Table - they are used with entity beans to define corresponding table name in db
+
+javax.persistence.Access - used to define access type, either field or property. Default type is field type. If you want to use getter/setter methods, you need to set it to property. Ex: @Access(value=AccessType.PROPERTY)
+
+javax.persistence.Id - used to define primary key in entity bean
+
+javax.persistence.EmbeddedId - used to define composite primary key in entity bean
+
+javax.persistence.Column - used to define column name in db table
+
+javax.persistence.GeneratedValue - used to define the strategy to be used for generating primany key. Used in conjuction with javax.persistence.GenerationType enum ex: GenerationType.IDENTITY
+
+javax.persistence.oneToOne - used to define one-to-one mapping between two entity beans. Similar annotations oneToMany, ManyToOne and ManyToMany
+
+org.hiberante.annotations.cascade - used to define cascading between two entity beans, used with mappings. Works in conjuction with org.hibernate.annotations.CascadeType
+
+javax.persistence.PrimaryKeyJoinColumn - used to define property for foriegn key. 
+
+*******************************************************
+
+Mappings in Hibernate
+oneToOne - Employee has one phone number and vice versa
+	Employee class
+	@OneToOne(targetEntity=CodeDecode.class)
+	private CodeDecode codeDecode;
+	
+ManyToOne - Many Employees belongs one company
+    Employee class
+	@ManytoOne(cascade=CascadeType.ALL)
+	private Address address;
+
+ManyToMany - Many Student can have multiple degrees
+    class Student{
+	  @ManyToMany(targetEntity=Degree.class, cascade=CascadeType.ALL)
+	  @JoinTable(name="DegreeStudentThirdTable",
+	               joinColumns = { @JoinColumn(name="StudentId")},
+				   inverseJoinColumns = { @JoinColumn(name="CertificateId")})
+	  private List<Degree> degrees;
+	}
+
+*************************************************
+
+What are hibernate configuration file?
+hibernate.cfg.xml
+	<?xml.................>
+	<!DOCTYPE ................>
+	
+	<hibernate-configuration>
+		<session-factory>
+			<property name="hbm2ddl.auto">update</property>
+			<property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
+			<property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+			<property name="connection.username"></property>
+			<property name="connection.password"></property>
+			<property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+			<mapping resouce="employee.hbm.xml"
+		</session-factory>
+	</hibernate-configuration>
+	
+Contains database specific configurations and used to initialize session factory.
+If you need to connect to different SQL then create another one here. 
+
+*********************************************************
+
+What is hibernate mapping file?
+	<?xml.................>
+	<!DOCTYPE ................>
+	
+	<hibernate-mapping>
+		<class name="com.gudigar.Employee" table="emptable">
+			<id name="id">
+			   <generator class="assigned"></generator>
+			</id>
+			
+			<property name="firstName"></property>
+			<property name="lastName"></property>
+		</class>
+	</hibernate-configuration>
+class_name.hbm.xml
+hibernate-mapping - root element
+class - specifies Persistent class
+id - specifies primary key attribute in the class
+generator - used to generate primary key
+property - specify property name of persistent class
+
+***********************************************
+
+Steps to create sample App of Hibernate
+1. Create a persistent POJO ex; Employee
+2. Create mapping file
+3. Create Configuration file
+4. Create class for retrieving or storing peristent POJO
+5. Run application to see results. 
+
+*********************************************
+
+Difference between openSession and getCurrentSession
+getCurrentSession() method returns session bound to context. 
+Since session object belongs to the context of Hibernate, it is okay if you dont close it. Once Session factory is closed, session object gets closed
+
+opensession() - helps in opening new session. 
+You should close this session object once you are done with all DB operations. And also you should open a new session for each request in multi threaded environment. 
+
+***********************************************
+difference between Session get() and load() method?
+get() loads data as soon as it is called
+load() retuns proxy object and loads data only when it's actually required.
+so load() is better because it support lazy loading. 
+
+since load() throw exception when data is not found from DB, we should use it only when we know data exists
+
+We should use get() when we want to make sure data exists in the database
+
+************************************************
+hibernate caching -types
+
+Why caching - hibernate cache query data to make our application faster and improves performance.
+Idea behind cache is to reduce no of db queries
+
+First level
+1. enabled by default in hibernate. 
+   It can never be disabled. 
+2. It is associated with Session object. 
+   When session gets closed, objects cached at first level is lost.
+3. Data stored in first level cached objects is only accessible for that seesion and not visible for other sessions.
+4. Hibernate still provides methods through which we can delete selected objects from cache or clear the cache completely
+
+
+Second level - 
+1. Not enabled by default, we have to programatically enable through configuration . This can be disabled as well. 
+2. Associated with Session factory. 
+3. Data stored in second level cached objects is for whole programs
+4. Currently EHCache and Infinispan provides implementation for Hiberanate Second level cache and we can use them. 
+
+Query level - 
+
+****************************************************
+how to configure Hibernate 2nd level cache using EHCache
+
+1. Add hibernate-ehcache dependency in your maven project or add jars
+   <dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-ehcache</artifactId>
+   </dependency>
+   
+2. Add the below properties in hibernate configuration file
+<property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EHCacheRegionFactory</property> //get object of echcache
+<property name="hibernate.cache.use_second_level_cache">true</property>
+<property name="hibernate.cache.use_query-cache">true</property> //always has to be used in conjuction with use_second_level_cache
+<property name="net.sf.ehcache.configurationResouceName">/gudigar.xml</property> //xml file where all ehcache configs are done
+
+3. Create gudigar.xml file (EHcache configuration file)
+    <?xml...................>
+	<ehcache .........................>
+	
+	<diskStore path="java.io.tmodir/ehcache"/> // path where my overflown cache data will be stored
+	
+	<defaultCache>
+	</defaultCache>
+	
+	//cache regions
+	<cache name="employee">
+	</cache>
+	
+	<cache name=".....StandardQueryCache">
+	</cache>
+	
+	<cache name=".....UpdateQueryCache">
+	</cache>
+	
+4. 	Annotate entity beans with @Cache annnotations and caching strategy to use
+    
+	import org.hibernate.annotations.Cache;
+	import org.hibernate.annotations.CacheConcurrencyStrategy;
+	
+	@Entity
+	@Table(name="Address")
+	@Cache(usage=CacheConcurrencyStrategy.READ_ONLY, region="employee")
+	public class Address{
+	}
